@@ -12,46 +12,36 @@ directories = {'image': 'image', 'audio': 'mp3', 'video': 'mp4', 'application': 
 
 def getMimeType(file_path):
     import mimetypes
-
     mime_type, encoding = mimetypes.guess_type(file_path)
     return mime_type
 
-import shutil
-
-
 def moveFiles(mime, file_path):
     try:
+        print(file_path, "file_path")
         if mime is not None:
             mime_type = mime.split('/')[0]
             target_dir = directories.get(mime_type)
-            
+
             if target_dir:
                 target_path = os.path.join(downloads_dir, target_dir)
-                # Check if the target directory exists, and create it if not
                 if not os.path.exists(target_path):
                     os.makedirs(target_path)
-                file_exists = os.path.exists(file_path)
 
-                if file_exists:
-                    # File exists, rename logic
-                    name, ext = os.path.splitext(file_path)
-                    # print(name,"name", ext,'SHEESH')
-                    # print(file_path,'file_path')
-                    counter = 1
-                    while True:
-                        new_name = f"{name}_{counter}_{ext}"
-                        new_path = os.path.join(target_path, new_name)
-                        if not os.path.exists(new_path):
-                            break
-                        counter += 1
+                # Extract the file name and extension
+                file_name = os.path.basename(file_path)
+                base_name, extension = os.path.splitext(file_name)
 
-                    # Move the file to the new path with the renamed file
-                    os.rename(file_path, new_path)
-                    shutil.move(file_path, new_path)
+                # Check if the file already exists in the destination
+                destination_file_path = os.path.join(target_path, file_name)
+                counter = 1
+                while os.path.exists(destination_file_path):
+                    # If file already exists, append a counter to the filename
+                    new_file_name = f"{base_name}_{counter}{extension}"
+                    destination_file_path = os.path.join(target_path, new_file_name)
+                    counter += 1
 
-                else:
-                    # File does not exist, just move it
-                    shutil.move(file_path, target_path)
+                # Move the file to the destination
+                shutil.move(file_path, destination_file_path)
             else:
                 return "Invalid MIME type"
         else:
