@@ -7,7 +7,7 @@ import shutil
 
 # downloads_dir  = 'C:\\Users\\kevin\\Downloads'
 # directories = {'image':downloads_dir, 'mp3':downloads_dir, 'mp4':downloads_dir}
-downloads_dir = 'C:\\Users\\kevin\\Downloads'
+downloads_dir = 'C:\\Users\\kevin.mensah\\Downloads'
 directories = {'image': 'image', 'audio': 'mp3', 'video': 'mp4', 'application': 'zip_files'}
 
 def getMimeType(file_path):
@@ -54,10 +54,6 @@ def scanDirectory():
         for entry in entries:
             mime = getMimeType(entry.path)
             moveFiles(mime, entry.path)
-           
-
-scanDirectory()
-
 
 class Watcher:
     def __init__(self, directory=".", handler=FileSystemEventHandler()):
@@ -85,5 +81,6 @@ class MyHandler(FileSystemEventHandler):
         scanDirectory()
 
 if __name__=="__main__":
+    scanDirectory()
     w = Watcher(downloads_dir, MyHandler())
     w.run()
